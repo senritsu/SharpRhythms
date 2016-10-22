@@ -1,4 +1,15 @@
+os: linux
+dist: trusty
+sudo: required
+
 language: csharp
 solution: SharpRhythms.sln
 mono: none
 dotnet: 1.0.0-preview2-003131
+install:
+    - dotnet restore
+script:
+    - cd SharpRhythms
+    - dotnet build
+    - cd ../SharpRhythms.Tests
+    - dotnet test
