@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Sprache": "2.1.0"
+  },
+  "frameworks": {
+    "net35": {
+    }
+  }
+}
