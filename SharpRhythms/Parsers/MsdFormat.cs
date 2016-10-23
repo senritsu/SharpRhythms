@@ -32,45 +32,45 @@ namespace SharpRhythms.Parsers
 
     public static class MsdFormat
     {
-        public static Parser<char> ListSeparator = Parse.Char(',');
+        public static Parser<char> ListSeparator = Parse.Char(',').Token();
         public static Parser<char> MsdTagStart = Parse.Char('#');
         public static Parser<char> MsdTagSeparator = Parse.Char(':');
         public static Parser<char> MsdTagContentDelimiter = Parse.Char(';');
+        public static Parser<char> MsdTagTerminator = Parse.Char(';');
         public static Parser<char> MsdComplexTagContentDelimiter = Parse.Char(':');
         public static Parser<string> MsdTagName = Parse.Upper.Many().Text();
 
-        public static Parser<IEnumerable<T>> ListOf<T, U>(Parser<T> parser, Parser<U> delimiter)
+        public static Parser<IEnumerable<TItem>> ListOf<TItem, TDelimiter>(Parser<TItem> parser, Parser<TDelimiter> delimiter)
             => from leading in parser
-                from rest in delimiter.Token().Then(x => parser).Many()
+                from rest in delimiter.Then(x => parser).Many()
                 select new[] {leading}.Concat(rest);
 
+        public static Parser<string> EndOfInput =
+            Parse.WhiteSpace.Many().Then(x => Parse.Return("").End());
+
+        public static Parser<string> EndOfTag =
+            MsdTagContentDelimiter.Then(
+                x => MsdTagStart.Token().Select(hash => hash.ToString())
+                    .Or(EndOfInput));
+
         public static Parser<string> MsdTagContent =
-            from content in Parse.AnyChar.Except(MsdTagContentDelimiter).Many().Text()
-            from terminator in MsdTagContentDelimiter.Token()
-            select content.Trim();
-
-        public static Parser<string> MsdTagTerminatorFollowingTag =
-            MsdTagStart.Token().Select(x => x.ToString());
-
-        public static Parser<string> MsdTagTerminatorFileEnd =
-            Parse.LineTerminator.Token().End();
-
-        public static Parser<string> MsdTagTerminator =
-            MsdTagTerminatorFileEnd.Or(MsdTagTerminatorFollowingTag);
+            Parse.AnyChar.Except(EndOfTag).Many().Text();
 
         public static Parser<MsdTag> MsdTag =
+            from leadingWhitespace in Parse.WhiteSpace.Many().Optional()
             from hash in MsdTagStart
             from name in MsdTagName
             from colon in MsdTagSeparator
-            from content in MsdTagContent.Until(MsdTagTerminator)
+            from content in MsdTagContent
+            from terminator in MsdTagTerminator
             select new MsdTag
             {
                 Name = name,
-                Content = content
+                Content = ListOf(Parse.AnyChar.Except(MsdTagContentDelimiter).Many().Text(), MsdTagContentDelimiter).Parse(content)
             };
 
         public static Parser<IEnumerable<MsdTag>> Parser =
-            from tags in MsdTag.Many()
+            from tags in MsdTag.Token().Many()
             select tags;
 
         public static Parser<TimeIndexedValue> TimedValue =

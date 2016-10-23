@@ -4,6 +4,7 @@
   "dependencies": {
     "SharpRhythms": "1.0.0",
     "xunit": "2.2.0-beta2-build3300",
+    "Shouldly": "2.8.2", 
     "dotnet-test-xunit": "2.2.0-preview2-build1029"
   },
   "frameworks": {
