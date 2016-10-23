@@ -54,8 +54,8 @@ namespace SharpRhythms.Tests
             var input = "#TAG:content;";
             var actual = MsdFormat.MsdTag.Parse(input);
             actual.Name.ShouldBe("TAG");
-            actual.Content.ShouldHaveSingleItem();
-            actual.Content.Single().ShouldBe("content");
+            actual.Contents.ShouldHaveSingleItem();
+            actual.Contents.Single().ShouldBe("content");
         }
 
         [Fact]

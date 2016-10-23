@@ -36,7 +36,7 @@ namespace SharpRhythms.Tests
         public void MultipartContentIsParsedCorrectly()
         {
             var input = "#TAG:content1;content2;content3;";
-            var actual = MsdFormat.MsdTag.Parse(input).Content.ToArray();
+            var actual = MsdFormat.MsdTag.Parse(input).Contents.ToArray();
             actual.ShouldBe(new [] {"content1", "content2", "content3"});
         }
 
@@ -45,8 +45,8 @@ namespace SharpRhythms.Tests
         {
             var input = "#TAG:;";
             var actual = MsdFormat.MsdTag.Parse(input);
-            actual.Content.ShouldHaveSingleItem();
-            actual.Content.Single().ShouldBe("");
+            actual.Contents.ShouldHaveSingleItem();
+            actual.Contents.Single().ShouldBe("");
         }
 
         [Fact]
@@ -54,8 +54,8 @@ namespace SharpRhythms.Tests
         {
             var input = "#TAG:a\nb\n;";
             var actual = MsdFormat.MsdTag.Parse(input);
-            actual.Content.ShouldHaveSingleItem();
-            actual.Content.Single().ShouldBe("a\nb\n");
+            actual.Contents.ShouldHaveSingleItem();
+            actual.Contents.Single().ShouldBe("a\nb\n");
         }
 
         [Fact]
@@ -63,8 +63,8 @@ namespace SharpRhythms.Tests
         {
             var input = "#TAG:a#b;";
             var actual = MsdFormat.MsdTag.Parse(input);
-            actual.Content.ShouldHaveSingleItem();
-            actual.Content.Single().ShouldBe("a#b");
+            actual.Contents.ShouldHaveSingleItem();
+            actual.Contents.Single().ShouldBe("a#b");
         }
     }
 }

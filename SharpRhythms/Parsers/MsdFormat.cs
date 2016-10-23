@@ -66,7 +66,7 @@ namespace SharpRhythms.Parsers
             select new MsdTag
             {
                 Name = name,
-                Content = ListOf(Parse.AnyChar.Except(MsdTagContentDelimiter).Many().Text(), MsdTagContentDelimiter).Parse(content)
+                Contents = ListOf(Parse.AnyChar.Except(MsdTagContentDelimiter).Many().Text(), MsdTagContentDelimiter).Parse(content)
             };
 
         public static Parser<IEnumerable<MsdTag>> Parser =

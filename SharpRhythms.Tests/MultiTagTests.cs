@@ -38,8 +38,8 @@ namespace SharpRhythms.Tests
             var input = "#TAG:content;  \n #OTHER:other content;";
             var actual = MsdFormat.MsdTag.Parse(input);
             actual.Name.ShouldBe("TAG");
-            actual.Content.ShouldHaveSingleItem();
-            actual.Content.Single().ShouldBe("content");
+            actual.Contents.ShouldHaveSingleItem();
+            actual.Contents.Single().ShouldBe("content");
         }
 
         [Fact]
@@ -53,8 +53,8 @@ namespace SharpRhythms.Tests
 
             var actual = parser.Parse(input);
             actual.Name.ShouldBe("TAG");
-            actual.Content.ShouldHaveSingleItem();
-            actual.Content.Single().ShouldBe("content");
+            actual.Contents.ShouldHaveSingleItem();
+            actual.Contents.Single().ShouldBe("content");
         }
 
         [Fact]
@@ -69,8 +69,8 @@ namespace SharpRhythms.Tests
             var actual = MsdFormat.Parser.Parse(input).ToArray();
             actual.Length.ShouldBe(4);
             actual.Select(x => x.Name).ShouldBe(new[] {"FIRST", "SECOND", "THIRD", "FOURTH"});
-            actual.Select(x => x.Content).ShouldAllBe(x => x.Count() == 1);
-            actual.Select(x => x.Content.Single())
+            actual.Select(x => x.Contents).ShouldAllBe(x => x.Count() == 1);
+            actual.Select(x => x.Contents.Single())
                 .ShouldBe(new[] {"first content", "second content", "third content", "fourth content"});
         }
     }
