@@ -1,4 +1,4 @@
-/***************************************************************************\
+﻿/***************************************************************************\
 The MIT License (MIT)
 
 Copyright (c) 2016 senritsu (https://github.com/senritsu)
@@ -22,13 +22,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Parsers
+namespace SharpRhythms.Enums
 {
-    using System.Collections.Generic;
-
-    public class MsdTag
+    public enum StepChartType
     {
-        public string Name { get; set; }
-        public IEnumerable<string> Contents { get; set; }
+        /// <summary>
+        /// Singleplayer one pad
+        /// </summary>
+        Single,
+        /// <summary>
+        /// Singleplayer two pads
+        /// </summary>
+        Double,
+        /// <summary>
+        /// Multiplayer versus
+        /// </summary>
+        Battle,
+        /// <summary>
+        /// Singleplayer one pad with additional arrow directions
+        /// </summary>
+        Solo
     }
 }

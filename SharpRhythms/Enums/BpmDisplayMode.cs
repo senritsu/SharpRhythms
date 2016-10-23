@@ -22,13 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Parsers
+namespace SharpRhythms.Enums
 {
-    using System.Collections.Generic;
-
-    public class MsdTag
+    public enum BpmDisplayMode
     {
-        public string Name { get; set; }
-        public IEnumerable<string> Contents { get; set; }
+        Static,
+        Range,
+        Random
     }
 }

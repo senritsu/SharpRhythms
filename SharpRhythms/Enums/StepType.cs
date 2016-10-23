@@ -22,13 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Parsers
+namespace SharpRhythms.Enums
 {
-    using System.Collections.Generic;
-
-    public class MsdTag
+    public enum StepType
     {
-        public string Name { get; set; }
-        public IEnumerable<string> Contents { get; set; }
+        None,
+        Normal,
+        HoldStart,
+        RollStart,
+        Release,
+        Mine,
+        Keysound,
+        Lift,
+        Fake
     }
 }

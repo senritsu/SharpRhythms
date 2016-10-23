@@ -1,4 +1,4 @@
-/***************************************************************************\
+﻿/***************************************************************************\
 The MIT License (MIT)
 
 Copyright (c) 2016 senritsu (https://github.com/senritsu)
@@ -22,13 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Parsers
+namespace SharpRhythms.Abstractions.Measure
 {
     using System.Collections.Generic;
 
-    public class MsdTag
+    public interface IMeasure<T>
     {
-        public string Name { get; set; }
-        public IEnumerable<string> Contents { get; set; }
+        TimeSignature TimeSignature { get; }
+        IEnumerable<T> Notes { get; }
     }
 }

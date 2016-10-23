@@ -1,4 +1,4 @@
-/***************************************************************************\
+﻿/***************************************************************************\
 The MIT License (MIT)
 
 Copyright (c) 2016 senritsu (https://github.com/senritsu)
@@ -25,10 +25,11 @@ THE SOFTWARE.
 namespace SharpRhythms.Parsers
 {
     using System.Collections.Generic;
+    using System.Linq;
 
-    public class MsdTag
+    public static class MsdTagExtensions
     {
-        public string Name { get; set; }
-        public IEnumerable<string> Contents { get; set; }
+        public static MsdTag Find(this IEnumerable<MsdTag> tags, string tagName) => tags.First(x => x.Name == tagName);
+        public static IEnumerable<MsdTag> FindAll(this IEnumerable<MsdTag> tags, string tagName) => tags.Where(x => x.Name == tagName);
     }
 }

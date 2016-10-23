@@ -1,4 +1,4 @@
-/***************************************************************************\
+﻿/***************************************************************************\
 The MIT License (MIT)
 
 Copyright (c) 2016 senritsu (https://github.com/senritsu)
@@ -22,13 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Parsers
+namespace SharpRhythms.Abstractions.Metadata
 {
-    using System.Collections.Generic;
+    using Enums;
 
-    public class MsdTag
+    public class DisplayBpm
     {
-        public string Name { get; set; }
-        public IEnumerable<string> Contents { get; set; }
+        public int Min { get; set; }
+        public int Max { get; set; }
+        public BpmDisplayMode Mode { get; set; }
     }
 }

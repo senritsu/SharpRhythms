@@ -1,4 +1,4 @@
-/***************************************************************************\
+﻿/***************************************************************************\
 The MIT License (MIT)
 
 Copyright (c) 2016 senritsu (https://github.com/senritsu)
@@ -22,13 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Parsers
+namespace SharpRhythms.Abstractions
 {
-    using System.Collections.Generic;
+    using Metadata;
 
-    public class MsdTag
+    public class TrackInformation
     {
-        public string Name { get; set; }
-        public IEnumerable<string> Contents { get; set; }
+        public TextWithAlternative Title { get; set; }
+        /// <summary>
+        /// Only available for .sm files
+        /// </summary>
+        public TextWithAlternative Subtitle { get; set; }
+        public TextWithAlternative Artist { get; set; }
+        public string Genre { get; set; }
+        /// <summary>
+        /// Only available for .sm files
+        /// </summary>
+        public string Credit { get; set; }
+        public DisplayBpm DisplayBpm { get; set; }
+        /// <summary>
+        /// Only available for .sm files
+        /// </summary>
+        public bool Selectable { get; set; }
+        /// <summary>
+        /// Only available for .dwi files
+        /// </summary>
+        public bool New { get; set; }
     }
 }

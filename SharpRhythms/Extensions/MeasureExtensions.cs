@@ -1,4 +1,4 @@
-/***************************************************************************\
+﻿/***************************************************************************\
 The MIT License (MIT)
 
 Copyright (c) 2016 senritsu (https://github.com/senritsu)
@@ -22,13 +22,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Parsers
+namespace SharpRhythms.Extensions
 {
     using System.Collections.Generic;
+    using Abstractions.Measure;
+    using Abstractions.Note;
+    using Abstractions.Timing;
+    using Abstractions.Track;
 
-    public class MsdTag
+    public static class MeasureExtensions
     {
-        public string Name { get; set; }
-        public IEnumerable<string> Contents { get; set; }
+        public static void RecalculateNoteTimes<T>(this IEnumerable<IMeasure<T>> measures,
+            Tempo tempo, double offset = 0) where T : ITimeIndexed, INoteValued
+        {
+            // TODO
+            // loop over measures
+            // loop over notes
+            // calculate cumulative time respecting bpm changes and interruptions
+            // calculate time of note respecting note value
+        }
+
+        public static void RecalculateNoteTimesWithConstantNoteValues<T>(this IEnumerable<IMeasure<T>> measures,
+            Tempo tempo, double offset = 0) where T : ITimeIndexed
+        {
+            // TODO
+            // loop over measures
+            // loop over notes
+            // calculate cumulative time respecting bpm changes and interruptions
+            // calculate time of note assuming constant note value per measure
+        }
     }
 }
