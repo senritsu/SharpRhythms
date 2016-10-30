@@ -9,5 +9,10 @@
   },
   "frameworks": {
     "net461": {}
+  },
+  "buildOptions": {
+    "copyToOutput": {
+      "include": [ "files" ]
+    }
   }
 }

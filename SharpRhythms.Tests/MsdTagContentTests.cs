@@ -36,35 +36,101 @@ namespace SharpRhythms.Tests
         public void MultipartContentIsParsedCorrectly()
         {
             var input = "#TAG:content1;content2;content3;";
-            var actual = MsdFormat.MsdTag.Parse(input).Contents.ToArray();
-            actual.ShouldBe(new [] {"content1", "content2", "content3"});
+            var actual = MsdParser.MsdTag.Parse(input).Content;
+            actual.ShouldBe("content1;content2;content3");
         }
 
         [Fact]
         public void EmptyContentIsParsedCorrectly()
         {
             var input = "#TAG:;";
-            var actual = MsdFormat.MsdTag.Parse(input);
-            actual.Contents.ShouldHaveSingleItem();
-            actual.Contents.Single().ShouldBe("");
+            var actual = MsdParser.MsdTag.Parse(input);
+            actual.Content.ShouldBe("");
         }
 
         [Fact]
         public void ContentWithNewlinesIsParsedCorrectly()
         {
             var input = "#TAG:a\nb\n;";
-            var actual = MsdFormat.MsdTag.Parse(input);
-            actual.Contents.ShouldHaveSingleItem();
-            actual.Contents.Single().ShouldBe("a\nb\n");
+            var actual = MsdParser.MsdTag.Parse(input);
+            actual.Content.ShouldBe("a\nb\n");
         }
 
         [Fact]
         public void ContentWithHashesIsParsedCorrectly()
         {
             var input = "#TAG:a#b;";
-            var actual = MsdFormat.MsdTag.Parse(input);
-            actual.Contents.ShouldHaveSingleItem();
-            actual.Contents.Single().ShouldBe("a#b");
+            var actual = MsdParser.MsdTag.Parse(input);
+            actual.Content.ShouldBe("a#b");
+        }
+
+        [Fact]
+        public void ComplexContentIsParsedCorrectly()
+        {
+            var input = "#TAG:a:b:c:d;";
+            var tag = MsdParser.MsdTag.Parse(input);
+            var actual = MsdTagContentParser.ComplexContent.Parse(tag.Content);
+            actual.ShouldBe(new [] {"a", "b", "c", "d"});
+        }
+
+        [Fact]
+        public void ListContentIsParsedCorrectly()
+        {
+            var input = "#TAG:a,b,c,d;";
+            var tag = MsdParser.MsdTag.Parse(input);
+            var actual = MsdTagContentParser.ListContent(Parse.Letter.Many().Text()).Parse(tag.Content);
+            actual.ShouldBe(new[] { "a", "b", "c", "d" });
+        }
+
+        [Fact]
+        public void ListContentWithNewlinesIsParsedCorrectly()
+        {
+            var input = @"#TAG:a
+,b
+,
+c
+,
+d;";
+            var tag = MsdParser.MsdTag.Parse(input);
+            var actual = MsdTagContentParser.ListContent(Parse.Letter.Many().Text()).Parse(tag.Content);
+            actual.ShouldBe(new[] { "a", "b", "c", "d" });
+        }
+
+        [Fact]
+        public void DoubleContentIsParsedCorrectly()
+        {
+            var input = "#TAG:0.000;";
+            var tag = MsdParser.MsdTag.Parse(input);
+            var actual = tag.AsDouble();
+            actual.ShouldBe(0);
+        }
+
+        [Fact]
+        public void TimeIndexedValueIsParsedCorrectly()
+        {
+            var input = "#TAG:1.000=2.000;";
+            var tag = MsdParser.MsdTag.Parse(input);
+            var actual = MsdTagContentParser.TimeIndexedValue.Parse(tag.Content);
+            actual.Time.ShouldBe(1);
+            actual.Value.ShouldBe(2);
+        }
+
+        [Fact]
+        public void TimeIndexedValueListIsParsedCorrectly()
+        {
+            var input = "#TAG:1.0=2.0,3.0=4.0,5.0=6.0;";
+            var tag = MsdParser.MsdTag.Parse(input);
+            var actual =
+                MsdTagContentParser.ListContent(MsdTagContentParser.TimeIndexedValue)
+                    .Parse(tag.Content)
+                    .ToArray();
+            actual.Length.ShouldBe(3);
+            actual[0].Time.ShouldBe(1);
+            actual[0].Value.ShouldBe(2);
+            actual[1].Time.ShouldBe(3);
+            actual[1].Value.ShouldBe(4);
+            actual[2].Time.ShouldBe(5);
+            actual[2].Value.ShouldBe(6);
         }
     }
 }

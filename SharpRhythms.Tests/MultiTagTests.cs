@@ -36,10 +36,9 @@ namespace SharpRhythms.Tests
         public void TagWithFollowingTagIsParsedCorrectly()
         {
             var input = "#TAG:content;  \n #OTHER:other content;";
-            var actual = MsdFormat.MsdTag.Parse(input);
+            var actual = MsdParser.MsdTag.Parse(input);
             actual.Name.ShouldBe("TAG");
-            actual.Contents.ShouldHaveSingleItem();
-            actual.Contents.Single().ShouldBe("content");
+            actual.Content.ShouldBe("content");
         }
 
         [Fact]
@@ -47,14 +46,13 @@ namespace SharpRhythms.Tests
         {
             var input = "#OTHER:other content;  \n #TAG:content;";
             var parser =
-                from tag1 in MsdFormat.MsdTag
-                from tag2 in MsdFormat.MsdTag
+                from tag1 in MsdParser.MsdTag
+                from tag2 in MsdParser.MsdTag
                 select tag2;
 
             var actual = parser.Parse(input);
             actual.Name.ShouldBe("TAG");
-            actual.Contents.ShouldHaveSingleItem();
-            actual.Contents.Single().ShouldBe("content");
+            actual.Content.ShouldBe("content");
         }
 
         [Fact]
@@ -66,11 +64,10 @@ namespace SharpRhythms.Tests
 #THIRD:third content;
 #FOURTH:fourth content;
 ";
-            var actual = MsdFormat.Parser.Parse(input).ToArray();
+            var actual = MsdParser.Parser.Parse(input).ToArray();
             actual.Length.ShouldBe(4);
             actual.Select(x => x.Name).ShouldBe(new[] {"FIRST", "SECOND", "THIRD", "FOURTH"});
-            actual.Select(x => x.Contents).ShouldAllBe(x => x.Count() == 1);
-            actual.Select(x => x.Contents.Single())
+            actual.Select(x => x.Content)
                 .ShouldBe(new[] {"first content", "second content", "third content", "fourth content"});
         }
     }

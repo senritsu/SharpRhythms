@@ -36,7 +36,7 @@ namespace SharpRhythms.Tests
         public void TagWithLeadingWhitespaceIsParsedCorrectly()
         {
             var input = "    #TAG:content;";
-            var actual = MsdFormat.MsdTag.Parse(input);
+            var actual = MsdParser.MsdTag.Parse(input);
             actual.Name.ShouldBe("TAG");
         }
 
@@ -44,7 +44,7 @@ namespace SharpRhythms.Tests
         public void TagWithLeadingNewlineIsParsedCorrectly()
         {
             var input = "\n#TAG:content;";
-            var actual = MsdFormat.MsdTag.Parse(input);
+            var actual = MsdParser.MsdTag.Parse(input);
             actual.Name.ShouldBe("TAG");
         }
 
@@ -52,17 +52,16 @@ namespace SharpRhythms.Tests
         public void SimpleTagIsParsedCorrectly()
         {
             var input = "#TAG:content;";
-            var actual = MsdFormat.MsdTag.Parse(input);
+            var actual = MsdParser.MsdTag.Parse(input);
             actual.Name.ShouldBe("TAG");
-            actual.Contents.ShouldHaveSingleItem();
-            actual.Contents.Single().ShouldBe("content");
+            actual.Content.ShouldBe("content");
         }
 
         [Fact]
         public void TagWithTrailingWhitespaceIsParsedCorrectly()
         {
             var input = "#TAG:content;    ";
-            var actual = MsdFormat.MsdTag.Parse(input);
+            var actual = MsdParser.MsdTag.Parse(input);
             actual.Name.ShouldBe("TAG");
         }
 
@@ -70,7 +69,7 @@ namespace SharpRhythms.Tests
         public void TagWithTrailingNewlineIsParsedCorrectly()
         {
             var input = "\n#TAG:content;\n";
-            var actual = MsdFormat.MsdTag.Parse(input);
+            var actual = MsdParser.MsdTag.Parse(input);
             actual.Name.ShouldBe("TAG");
         }
 
@@ -78,14 +77,22 @@ namespace SharpRhythms.Tests
         public void TagWithFollowingGarbageThrowsException()
         {
             var input = "\n#TAG:content;garbage";
-            Should.Throw<ParseException>(() => MsdFormat.MsdTag.Parse(input));
+            Should.Throw<ParseException>(() => MsdParser.MsdTag.Parse(input));
         }
 
         [Fact]
         public void UnterminatedTagThrowsException()
         {
             var input = "\n#TAG:content";
-            Should.Throw<ParseException>(() => MsdFormat.MsdTag.Parse(input));
+            Should.Throw<ParseException>(() => MsdParser.MsdTag.Parse(input));
+        }
+
+        [Fact]
+        public void DecimalParsingWorks()
+        {
+            var input = "0.000a";
+            var actual = Parse.DecimalInvariant.Parse(input);
+            actual.ShouldBe("0.000");
         }
     }
 }
