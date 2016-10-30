@@ -32,16 +32,16 @@ namespace SharpRhythms.Implementations.Stepmania
 
     public class StepmaniaTrack : IEnumerable<StepmaniaChart>, IMsdTrack
     {
-        public TrackInformation Information { get; set; }
-        public SongPreview Preview { get; set; }
-        public Tempo Tempo { get; set; }
+        public TrackInformation Information { get; set; } = new TrackInformation();
+        public SongPreview Preview { get; set; } = new SongPreview();
+        public Tempo Tempo { get; set; } = new Tempo();
         /// <summary>
         /// Different interpretation for .dwi files
         /// </summary>
         public double Offset { get; set; }
-        public AdditionalFiles Files { get; set; }
-        public IEnumerable<StepmaniaChart> Charts { get; set; }
-        public Dictionary<string, string> AdditionalTags { get; set; }
+        public AdditionalFiles Files { get; set; } = new AdditionalFiles();
+        public List<StepmaniaChart> Charts { get; set; } = new List<StepmaniaChart>();
+        public Dictionary<string, string> AdditionalTags { get; set; } = new Dictionary<string, string>();
 
         public IEnumerator<StepmaniaChart> GetEnumerator() => Charts.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

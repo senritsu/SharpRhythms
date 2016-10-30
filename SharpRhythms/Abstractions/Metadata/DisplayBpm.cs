@@ -28,8 +28,8 @@ namespace SharpRhythms.Abstractions.Metadata
 
     public class DisplayBpm
     {
-        public int Min { get; set; }
-        public int Max { get; set; }
+        public double Min { get; set; }
+        public double Max { get; set; }
         public BpmDisplayMode Mode { get; set; }
     }
 }

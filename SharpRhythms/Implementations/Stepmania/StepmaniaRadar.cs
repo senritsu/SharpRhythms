@@ -26,10 +26,10 @@ namespace SharpRhythms.Implementations.Stepmania
 {
     public class StepmaniaRadar
     {
-        public decimal Stream { get; set; }
-        public decimal Voltage { get; set; }
-        public decimal Air { get; set; }
-        public decimal Freeze { get; set; }
-        public decimal Chaos { get; set; }
+        public double Stream { get; set; }
+        public double Voltage { get; set; }
+        public double Air { get; set; }
+        public double Freeze { get; set; }
+        public double Chaos { get; set; }
     }
 }

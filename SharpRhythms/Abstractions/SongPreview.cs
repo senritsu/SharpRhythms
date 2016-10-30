@@ -26,7 +26,7 @@ namespace SharpRhythms.Abstractions
 {
     public class SongPreview
     {
-        public decimal SampleStart { get; set; }
-        public decimal SampleLength { get; set; }
+        public double SampleStart { get; set; }
+        public double SampleLength { get; set; }
     }
 }

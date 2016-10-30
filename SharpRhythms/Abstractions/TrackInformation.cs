@@ -28,25 +28,30 @@ namespace SharpRhythms.Abstractions
 
     public class TrackInformation
     {
-        public TextWithAlternative Title { get; set; }
+        public TextWithAlternative Title { get; set; } = new TextWithAlternative();
         /// <summary>
         /// Only available for .sm files
         /// </summary>
-        public TextWithAlternative Subtitle { get; set; }
-        public TextWithAlternative Artist { get; set; }
+        public TextWithAlternative Subtitle { get; set; } = new TextWithAlternative();
+
+        public TextWithAlternative Artist { get; set; } = new TextWithAlternative();
+
         public string Genre { get; set; }
+
         /// <summary>
         /// Only available for .sm files
         /// </summary>
         public string Credit { get; set; }
-        public DisplayBpm DisplayBpm { get; set; }
+        public DisplayBpm DisplayBpm { get; set; } = new DisplayBpm();
+
         /// <summary>
         /// Only available for .sm files
         /// </summary>
-        public bool Selectable { get; set; }
+        public bool Selectable { get; set; } = true;
+
         /// <summary>
         /// Only available for .dwi files
         /// </summary>
-        public bool New { get; set; }
+        public bool New { get; set; } = false;
     }
 }

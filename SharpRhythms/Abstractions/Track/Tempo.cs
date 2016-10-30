@@ -28,7 +28,7 @@ namespace SharpRhythms.Abstractions.Track
 
     public class Tempo
     {
-        public IEnumerable<BpmChange> Bpm { get; set; }
-        public IEnumerable<Interruption> Interruptions { get; set; }
+        public IEnumerable<BpmChange> Bpm { get; set; } = new BpmChange[0];
+        public IEnumerable<Interruption> Interruptions { get; set; } = new Interruption[0];
     }
 }
