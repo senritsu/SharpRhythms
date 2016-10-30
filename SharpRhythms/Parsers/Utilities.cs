@@ -1,4 +1,4 @@
-/***************************************************************************\
+﻿/***************************************************************************\
 The MIT License (MIT)
 
 Copyright (c) 2016 senritsu (https://github.com/senritsu)
@@ -24,9 +24,17 @@ THE SOFTWARE.
 
 namespace SharpRhythms.Parsers
 {
-    public class MsdTag
+    using System.Collections.Generic;
+    using System.Linq;
+    using Sprache;
+
+    public static class Utilities
     {
-        public string Name { get; set; }
-        public string Content { get; set; }
+        public static Parser<IEnumerable<TItem>> ListOf<TItem, TDelimiter>(Parser<TItem> parser,
+            Parser<TDelimiter> delimiter)
+            => (from leading in parser.Except(delimiter)
+                from rest in delimiter.Then(x => parser.Except(delimiter)).Many()
+                select new[] {leading}.Concat(rest))
+                .Or(Parse.Return("").End().Select(x => new List<TItem>()));
     }
 }

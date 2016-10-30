@@ -24,12 +24,62 @@ THE SOFTWARE.
 
 namespace SharpRhythms.Parsers
 {
+    using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
+    using Abstractions.Metadata;
+    using Sprache;
 
     public static class MsdTagExtensions
     {
-        public static MsdTag Find(this IEnumerable<MsdTag> tags, string tagName) => tags.First(x => x.Name == tagName);
+        public static MsdTag Find(this IEnumerable<MsdTag> tags, string tagName) => tags.FirstOrDefault(x => x.Name == tagName);
+
         public static IEnumerable<MsdTag> FindAll(this IEnumerable<MsdTag> tags, string tagName) => tags.Where(x => x.Name == tagName);
+
+        public static bool AsBoolean(this MsdTag tag) => MsdTagContentParser.YesOrNo.Parse(tag.Content);
+
+        public static double AsDouble(this MsdTag tag, double defaultValue = 0.0)
+        {
+            double value;
+            return double.TryParse(tag.Content, NumberStyles.Any, CultureInfo.InvariantCulture, out value)
+                ? value
+                : defaultValue;
+        }
+
+        public static TextWithAlternative AsTextWithAlternative(this MsdTag tag, MsdTag other = null) => new TextWithAlternative
+        {
+            Original = tag?.Content,
+            Alternative = other?.Content
+        };
+
+        public static string TryFindString(this IEnumerable<MsdTag> tags, string tagName, string defaultValue = "")
+        {
+            var tag = tags.Find(tagName);
+            return tag != null ? tag.Content : defaultValue;
+        }
+
+        public static double TryFindDouble(this IEnumerable<MsdTag> tags, string tagName, double defaultValue = 0.0)
+        {
+            var tag = tags.Find(tagName);
+            return tag?.AsDouble() ?? defaultValue;
+        }
+
+        public static bool TryFindBoolean(this IEnumerable<MsdTag> tags, string tagName, bool defaultValue = false)
+        {
+            var tag = tags.Find(tagName);
+            return tag?.AsBoolean() ?? defaultValue;
+        }
+
+        public static TextWithAlternative TryFindTextWithAlternative(this IEnumerable<MsdTag> tags, string textTagName,
+            string alternativeTextTagName)
+        {
+            var tagArray = tags as MsdTag[] ?? tags.ToArray();
+            return new TextWithAlternative
+            {
+                Original = tagArray.TryFindString(textTagName),
+                Alternative = tagArray.TryFindString(alternativeTextTagName)
+            };
+        } 
     }
 }
