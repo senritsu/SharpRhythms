@@ -28,6 +28,7 @@ namespace SharpRhythms.Parsers
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using Implementations;
     using Sprache;
 
@@ -39,10 +40,13 @@ namespace SharpRhythms.Parsers
 
         private T Parse(string fileContents)
         {
-            var tags = MsdFormat.Parser.Parse(fileContents).ToArray();
+            var commentRegex = new Regex("//[^\n]*\n");
+            fileContents = commentRegex.Replace(fileContents, "");
+
+            var tags = MsdParser.Parser.Parse(fileContents).ToArray();
             var track = BuildTrack(tags);
 
-            foreach (var tag in MsdFormat.Parser.Parse(fileContents))
+            foreach (var tag in MsdParser.Parser.Parse(fileContents))
             {
                 if (TagActions.ContainsKey(tag.Name))
                 {
