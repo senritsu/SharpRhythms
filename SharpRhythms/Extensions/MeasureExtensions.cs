@@ -24,7 +24,9 @@ THE SOFTWARE.
 
 namespace SharpRhythms.Extensions
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Abstractions.Measure;
     using Abstractions.Note;
     using Abstractions.Timing;
@@ -32,6 +34,11 @@ namespace SharpRhythms.Extensions
 
     public static class MeasureExtensions
     {
+        public static double BeatSpaceLength<T>(this IMeasure<T> measure)
+        {
+            return 4.0*measure.TimeSignature.Beats/measure.TimeSignature.BeatValue;
+        }
+
         public static void RecalculateNoteTimes<T>(this IEnumerable<IMeasure<T>> measures,
             Tempo tempo, double offset = 0) where T : ITimeIndexed, INoteValued
         {
