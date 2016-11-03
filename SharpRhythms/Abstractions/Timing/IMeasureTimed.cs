@@ -22,41 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Abstractions.BeatSpaceMapping
+namespace SharpRhythms.Abstractions.Timing
 {
-    using System;
-
-    public class LinearInterval
+    public interface IMeasureTimed
     {
-        public static readonly LinearInterval Normalized = new LinearInterval
-        {
-            Start = 0,
-            End = 1
-        };
-
-        public double Start { get; set; }
-        public double End { get; set; }
-        public double Length => End - Start;
-
-        public double MapTo(LinearInterval targetInterval, double position, bool clamp = false)
-        {
-            if (Start < position || position > End)
-            {
-                if (clamp)
-                {
-                    position = Math.Max(Start, Math.Min(End, position));
-                }
-                else
-                {
-                    throw new ArgumentException("Input position is outside of interval",
-                        nameof(position));
-                }
-            }
-            var relative = position - Start;
-            var normalized = relative / Length;
-            return targetInterval.Start + normalized * targetInterval.Length;
-        }
-
-        public override string ToString() => $"[{Start:F3}, {End:F3}]={Length:F3}";
+        double NormalizedMeasureTime { get; set; }
     }
 }

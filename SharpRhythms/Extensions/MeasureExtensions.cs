@@ -27,6 +27,7 @@ namespace SharpRhythms.Extensions
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Abstractions.BeatSpaceMapping;
     using Abstractions.Measure;
     using Abstractions.Note;
     using Abstractions.Timing;
@@ -40,23 +41,20 @@ namespace SharpRhythms.Extensions
         }
 
         public static void RecalculateNoteTimes<T>(this IEnumerable<IMeasure<T>> measures,
-            Tempo tempo, double offset = 0) where T : ITimeIndexed, INoteValued
+            Tempo tempo, double songLength, double offset = 0) where T : class, ITimeIndexed, INoteValued, IMeasureTimed
         {
-            // TODO
-            // loop over measures
-            // loop over notes
-            // calculate cumulative time respecting bpm changes and interruptions
-            // calculate time of note respecting note value
-        }
+            var songSegments = TimeUtilities.CalculateSongSegments(tempo, songLength, offset);
+            var tracker = new NoteTimeTracker(songSegments);
 
-        public static void RecalculateNoteTimesWithConstantNoteValues<T>(this IEnumerable<IMeasure<T>> measures,
-            Tempo tempo, double offset = 0) where T : ITimeIndexed
-        {
-            // TODO
-            // loop over measures
-            // loop over notes
-            // calculate cumulative time respecting bpm changes and interruptions
-            // calculate time of note assuming constant note value per measure
+            foreach (var measure in measures)
+            {
+                tracker.NewMeasure(measure.BeatSpaceLength());
+
+                foreach (var note in measure.Notes)
+                {
+                    note.Time = tracker.NextNoteTime(note.NormalizedMeasureTime);
+                }
+            }
         }
     }
 }

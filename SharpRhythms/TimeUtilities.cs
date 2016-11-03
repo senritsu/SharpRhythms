@@ -38,7 +38,12 @@ namespace SharpRhythms
             return 4*noteValue*60/bpm;
         }
 
-        public static IEnumerable<SongSegment> CalculateSongSegments(Tempo tempo, double songLength)
+        public static double CalculateNoteTime(double beatSpacePosition, SongSegment segment)
+        {
+            return segment.BeatSpace.MapTo(segment.SongTime, beatSpacePosition);
+        }
+
+        public static IEnumerable<SongSegment> CalculateSongSegments(Tempo tempo, double songLength, double offset = 0)
         {
             var bpmChanges = tempo.Bpm.ToList();
             if (bpmChanges.First().Time > 0)
@@ -52,7 +57,7 @@ namespace SharpRhythms
                         .Concat(tempo.Interruptions.Cast<ITimeIndexed>())
                         .OrderBy(x => x.Time));
 
-            var timeCursor = 0.0;
+            var timeCursor = offset;
             var beatCursor = 0.0;
             var bpm = 0.0;
             var segments = new List<SongSegment>();
