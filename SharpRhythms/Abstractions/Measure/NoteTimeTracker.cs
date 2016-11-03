@@ -26,6 +26,7 @@ namespace SharpRhythms.Abstractions.Measure
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using BeatSpaceMapping;
 
@@ -58,25 +59,35 @@ namespace SharpRhythms.Abstractions.Measure
             };
         }
 
-        public double NextNoteTime(double normalizedMeasureTime)
+        public double CalculateNoteTime(double beatSpacePosition)
+        {
+            SongSegment segment;
+            if (beatSpacePosition < _lastBeatSpacePosition)
+            {
+                segment = _originalSegments.First(x => x.BeatSpace.End > beatSpacePosition);
+                Debug.WriteLine(
+                    "Calculating note times out of order is less efficient, consider sorting your notes beforehand");
+            }
+            else
+            {
+                _lastBeatSpacePosition = beatSpacePosition;
+
+                while (_currentSegment.BeatSpace.End < beatSpacePosition)
+                {
+                    _currentSegment = _segments.Dequeue();
+                }
+
+                segment = _currentSegment;
+            }
+
+            return segment.BeatSpace.MapTo(segment.SongTime, beatSpacePosition);
+        }
+
+        public double CalculateNoteTimeFromMeasureTime(double normalizedMeasureTime)
         {
             var beatSpacePosition = LinearInterval.Normalized.MapTo(_measureBeatSpace, normalizedMeasureTime);
 
-            if (beatSpacePosition < _lastBeatSpacePosition)
-            {
-                throw new ArgumentException(
-                    $"Last note's beat space position was {_lastBeatSpacePosition}, given value of {beatSpacePosition} violates requirement of monotonic increase of notes positions",
-                    nameof(normalizedMeasureTime));
-            }
-
-            _lastBeatSpacePosition = beatSpacePosition;
-
-            while (_currentSegment.BeatSpace.End < beatSpacePosition)
-            {
-                _currentSegment = _segments.Dequeue();
-            }
-
-            return _currentSegment.BeatSpace.MapTo(_currentSegment.SongTime, beatSpacePosition);
+            return CalculateNoteTime(beatSpacePosition);
         }
 
         public void Reset()

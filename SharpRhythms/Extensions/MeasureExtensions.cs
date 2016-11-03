@@ -24,10 +24,7 @@ THE SOFTWARE.
 
 namespace SharpRhythms.Extensions
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using Abstractions.BeatSpaceMapping;
     using Abstractions.Measure;
     using Abstractions.Note;
     using Abstractions.Timing;
@@ -52,7 +49,7 @@ namespace SharpRhythms.Extensions
 
                 foreach (var note in measure.Notes)
                 {
-                    note.Time = tracker.NextNoteTime(note.NormalizedMeasureTime);
+                    note.Time = tracker.CalculateNoteTimeFromMeasureTime(note.NormalizedMeasureTime);
                 }
             }
         }
