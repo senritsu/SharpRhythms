@@ -40,7 +40,7 @@ namespace SharpRhythms.Abstractions.BeatSpaceMapping
 
         public double MapTo(LinearInterval targetInterval, double position, bool clamp = false)
         {
-            if (Start < position || position > End)
+            if (position < Start || position > End)
             {
                 if (clamp)
                 {

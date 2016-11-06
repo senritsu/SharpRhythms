@@ -36,7 +36,7 @@ namespace SharpRhythms.Tests.Formats
         [Fact]
         public void BpmChangesAreParsedCorrectly()
         {
-            var parser = new SmParser();
+            var parser = new SmParser(x => 180);
             var actual = parser.LoadFromFile("files/SM/bpm_changes_and_stops.sm").Tempo.Bpm.ToArray();
             actual.Length.ShouldBe(3);
             actual.Select(x => x.Time).ShouldBe(new [] {1.0, 3.0, 5.0});
@@ -46,7 +46,7 @@ namespace SharpRhythms.Tests.Formats
         [Fact]
         public void StopsAreParsedCorrectly()
         {
-            var parser = new SmParser();
+            var parser = new SmParser(x => 180);
             var actual = parser.LoadFromFile("files/SM/bpm_changes_and_stops.sm").Tempo.Interruptions.ToArray();
             actual.Length.ShouldBe(3);
             actual.Select(x => x.Time).ShouldBe(new[] { 1.0, 3.0, 5.0 });
@@ -61,7 +61,7 @@ namespace SharpRhythms.Tests.Formats
         [Fact]
         public void ChartsAreParsedCorrectly()
         {
-            var parser = new SmParser();
+            var parser = new SmParser(x => 180);
             var actual = parser.LoadFromFile("files/SM/chart_definitions.sm").Charts;
             actual.Count.ShouldBe(2);
             actual.First().Type.ShouldBe(StepChartType.Single);

@@ -35,7 +35,7 @@ namespace SharpRhythms.Tests.IntegrationTests
         [Fact]
         public void LoadsCorrectlyFromSMFormat()
         {
-            var track = new SmParser().LoadFromFile("files/SM/simple_test_song.sm");
+            var track = new SmParser(x => 180).LoadFromFile("files/SM/simple_test_song.sm");
 
             track.Information.Title.Original.ShouldBe("作品名");
             track.Information.Title.Alternative.ShouldBe("Sakuhinmei");

@@ -28,6 +28,7 @@ namespace SharpRhythms.Implementations.Stepmania
     using System.Collections.Generic;
     using Abstractions;
     using Abstractions.Track;
+    using Formats;
     using Parsers;
 
     public class StepmaniaTrack : IEnumerable<StepmaniaChart>, IMsdTrack

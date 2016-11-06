@@ -26,6 +26,6 @@ namespace SharpRhythms.Abstractions.Timing
 {
     public interface IMeasureTimed
     {
-        double NormalizedMeasureTime { get; set; }
+        double NormalizedMeasureTime { get; }
     }
 }

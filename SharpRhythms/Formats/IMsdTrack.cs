@@ -22,13 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Implementations
+namespace SharpRhythms.Formats
 {
     using System.Collections.Generic;
+    using Abstractions;
+    using Abstractions.Track;
     using Parsers;
 
     public interface IMsdTrack
     {
+        AdditionalFiles Files { get; }
+        Tempo Tempo { get; }
+        double Offset { get; }
+
         IEnumerable<MsdTag> UnparsedTags { get; set; }
     }
 }

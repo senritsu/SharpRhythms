@@ -28,15 +28,17 @@ namespace SharpRhythms.Parsers.SM
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using Abstractions.Measure;
     using Abstractions.Metadata;
     using Abstractions.Track;
     using Enums;
+    using Extensions;
     using Implementations.Stepmania;
     using Sprache;
 
     public class SmParser : SpecificMsdParser<StepmaniaTrack>
     {
-        public SmParser()
+        public SmParser(AudioLengthAccessor audioLengthAccessor) : base(audioLengthAccessor)
         {
             // track information
             TagActions["TITLE"] = (tag, track) => track.Information.Title.Original = tag.Content;
@@ -64,6 +66,15 @@ namespace SharpRhythms.Parsers.SM
             TagActions["STOPS"] = (tag, track) => track.Tempo.Interruptions = Interruptions.Parse(tag.Content).ToArray();
             // notes
             TagActions["NOTES"] = (tag, track) => track.Charts.Add(Chart.Parse(tag.Content));
+        }
+
+        protected override void PostprocessTrack(StepmaniaTrack track)
+        {
+            foreach (var chart in track)
+            {
+                var measures = chart.Measures as IEnumerable<IMeasure<StepmaniaNote>>;
+                measures.RecalculateNoteTimes(track.Tempo, SongLength, track.Offset);
+            }
         }
 
         private static Difficulty ConvertDifficulty(string difficulty)
@@ -140,16 +151,17 @@ namespace SharpRhythms.Parsers.SM
                 Chaos = numbers[4]
             };
 
-        private static StepmaniaRow ParseRow(string notes, StepChartType chartType, int rowCount) => new StepmaniaRow(
-            notes.Select(
-                (x, i) =>
-                    new StepmaniaNote(DirectionLookup[chartType][i], rowCount,
-                        StepTypeLookup[x])).Where(x => x.Type != StepType.None));
+        private static StepmaniaRow ParseRow(string notes, StepChartType chartType, int rowIndex, int rowCount)
+            => new StepmaniaRow(
+                notes.Select(
+                    (note, noteIndex) =>
+                        new StepmaniaNote(DirectionLookup[chartType][noteIndex], rowCount, (double) rowIndex/rowCount,
+                            StepTypeLookup[note])).Where(x => x.Type != StepType.None));
 
         private static Parser<StepmaniaMeasure> Measure(StepChartType chartType) =>
             from rowStrings in Utilities.ListOf(Parse.LetterOrDigit.Many().Text(), Parse.LineTerminator)
             let nonEmptyRows = rowStrings.Where(x => !string.IsNullOrEmpty(x)).ToArray()
-            let rows = nonEmptyRows.Select(x => ParseRow(x, chartType, nonEmptyRows.Length))
+            let rows = nonEmptyRows.Select((row, rowIndex) => ParseRow(row, chartType, rowIndex, nonEmptyRows.Length))
             select new StepmaniaMeasure(rows);
 
         private static readonly Parser<StepmaniaChart> Chart =
@@ -160,6 +172,7 @@ namespace SharpRhythms.Parsers.SM
             from radar in MsdTagContentParser.ComplexContentPart
             from measures in MsdTagContentParser.ComplexContentPart
             let chartType = ConvertType(type)
+
             select new StepmaniaChart
             {
                 Type = chartType,

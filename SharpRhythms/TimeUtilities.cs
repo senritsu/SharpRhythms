@@ -46,6 +46,12 @@ namespace SharpRhythms
         public static IEnumerable<SongSegment> CalculateSongSegments(Tempo tempo, double songLength, double offset = 0)
         {
             var bpmChanges = tempo.Bpm.ToList();
+
+            if (!bpmChanges.Any())
+            {
+                throw new ArgumentException("tempo must at least contain one bpm entry", nameof(tempo));
+            }
+
             if (bpmChanges.First().Time > 0)
             {
                 bpmChanges[0] = new BpmChange { Time = 0, Bpm = bpmChanges.First().Bpm };

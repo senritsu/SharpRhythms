@@ -24,19 +24,30 @@ THE SOFTWARE.
 
 namespace SharpRhythms.Parsers
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Implementations;
+    using Formats;
     using Sprache;
 
     public abstract class SpecificMsdParser<T> where T : IMsdTrack, new()
     {
-        public delegate void TagAction(MsdTag tag, T track);
+        private readonly AudioLengthAccessor _audioLengthAccessor;
+        private T _track;
+
+        protected delegate void TagAction(MsdTag tag, T track);
+        public delegate double AudioLengthAccessor(string audioFilePath);
 
         protected abstract T BuildTrack(IEnumerable<MsdTag> tags);
+        protected virtual void PostprocessTrack(T track) {}
+
+        protected double SongLength => _audioLengthAccessor(_track.Files.Music);
+
+        protected SpecificMsdParser(AudioLengthAccessor audioLengthAccessor)
+        {
+            _audioLengthAccessor = audioLengthAccessor;
+        }
 
         private T Parse(string fileContents)
         {
@@ -44,17 +55,19 @@ namespace SharpRhythms.Parsers
             fileContents = commentRegex.Replace(fileContents, "");
 
             var tags = MsdParser.Parser.Parse(fileContents).ToArray();
-            var track = BuildTrack(tags);
+            _track = BuildTrack(tags);
 
             foreach (var tag in MsdParser.Parser.Parse(fileContents))
             {
                 if (TagActions.ContainsKey(tag.Name))
                 {
-                    TagActions[tag.Name](tag, track);
+                    TagActions[tag.Name](tag, _track);
                 }
             }
 
-            return track;
+            PostprocessTrack(_track);
+
+            return _track;
         }
 
         protected Dictionary<string, TagAction> TagActions { get; } = new Dictionary<string, TagAction>();
