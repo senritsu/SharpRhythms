@@ -24,16 +24,18 @@ THE SOFTWARE.
 
 namespace SharpRhythms.Implementations.Stepmania
 {
+    using System;
     using Abstractions.Note;
     using Abstractions.Timing;
     using Enums;
 
-    public class StepmaniaNote : ITimeIndexed, IDirectional, INoteValued
+    public class StepmaniaNote : ITimeIndexed, IDirectional, INoteValued, IMeasureTimed
     {
-        public StepmaniaNote(Direction direction, int value, StepType type = StepType.Normal)
+        public StepmaniaNote(Direction direction, int value, double normalizedMeasureTime, StepType type = StepType.Normal)
         {
             Direction = direction;
             Denominator = value;
+            NormalizedMeasureTime = normalizedMeasureTime;
             Type = type;
         }
 
@@ -43,5 +45,6 @@ namespace SharpRhythms.Implementations.Stepmania
         public StepType Type { get; }
         public int Numerator => 1;
         public int Denominator { get; }
+        public double NormalizedMeasureTime { get; }
     }
 }
