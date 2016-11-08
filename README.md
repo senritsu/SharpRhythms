@@ -16,6 +16,8 @@ Common Rhythm game file format parser for dotnet
 
 There are parsers available for common formats. They are located in the `SharpRhythms.Parsers.*` namespaces.
 
+Most parsers require a `double AudioLengthAccessor(string audioFilePath)` delegate as a constructor parameter. This function gets the path to the music file for the beatmap as specified in the simfile, and should return the song length in seconds.
+
 After instantiating a specific parser, beatmaps can be parsed from a variety of sources.
 
 ```
@@ -30,8 +32,12 @@ var track3 = parser.Load(fileContentsAsStream);
 ```
 using SharpRhythms.Parsers.Msd;
 
+private double GetSongLength(string songFilePath) {
+// ...
+}
+
 // ...
 
-var parser = new SMParser();
+var parser = new SMParser(GetSongLength);
 ```
 
