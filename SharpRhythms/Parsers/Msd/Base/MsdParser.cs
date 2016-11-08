@@ -47,7 +47,7 @@ namespace SharpRhythms.Parsers.Msd.Base
             Parse.AnyChar.Except(EndOfTag).Many().Text();
 
         public static Parser<MsdTag> MsdTag =
-            from leadingWhitespace in Parse.WhiteSpace.Many().Optional()
+            from leadingWhitespace in Parse.WhiteSpace.Many()
             from hash in MsdTagStart
             from name in MsdTagName
             from colon in MsdTagSeparator

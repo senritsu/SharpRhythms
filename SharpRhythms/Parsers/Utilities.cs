@@ -30,11 +30,11 @@ namespace SharpRhythms.Parsers
 
     public static class Utilities
     {
-        public static Parser<IEnumerable<TItem>> ListOf<TItem, TDelimiter>(Parser<TItem> parser,
+        public static Parser<List<TItem>> ListOf<TItem, TDelimiter>(Parser<TItem> parser,
             Parser<TDelimiter> delimiter)
             => (from leading in parser.Except(delimiter)
                 from rest in delimiter.Then(x => parser.Except(delimiter)).Many()
-                select new[] {leading}.Concat(rest))
-                .Or(Parse.Return("").End().Select(x => new List<TItem>()));
+                select new[] {leading}.Concat(rest).ToList())
+                .Or(Parse.Return(new List<TItem>()).End());
     }
 }

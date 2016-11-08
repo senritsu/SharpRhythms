@@ -63,8 +63,8 @@ namespace SharpRhythms.Parsers.Msd
             TagActions["SAMPLELENGTH"] = (tag, track) => track.Preview.SampleLength = tag.AsDouble();
             // offset and tempo
             TagActions["OFFSET"] = (tag, track) => track.Offset = tag.AsDouble();
-            TagActions["BPMS"] = (tag, track) => track.Tempo.Bpm = BpmChanges.Parse(tag.Content).ToArray();
-            TagActions["STOPS"] = (tag, track) => track.Tempo.Interruptions = Interruptions.Parse(tag.Content).ToArray();
+            TagActions["BPMS"] = (tag, track) => track.Tempo.Bpm = BpmChanges.Parse(tag.Content);
+            TagActions["STOPS"] = (tag, track) => track.Tempo.Interruptions = Interruptions.Parse(tag.Content);
             // notes
             TagActions["NOTES"] = (tag, track) => track.Charts.Add(Chart.Parse(tag.Content));
         }
@@ -73,7 +73,7 @@ namespace SharpRhythms.Parsers.Msd
         {
             foreach (var chart in track)
             {
-                var measures = chart.Measures as IEnumerable<IMeasure<StepmaniaNote>>;
+                var measures = chart.Measures.Cast<IMeasure<StepmaniaNote>>();
                 measures.RecalculateNoteTimes(track.Tempo, SongLength, track.Offset);
             }
         }
@@ -160,9 +160,9 @@ namespace SharpRhythms.Parsers.Msd
                             StepTypeLookup[note])).Where(x => x.Type != StepType.None));
 
         private static Parser<StepmaniaMeasure> Measure(StepChartType chartType) =>
-            from rowStrings in Utilities.ListOf(Parse.LetterOrDigit.Many().Text(), Parse.LineTerminator)
+            from rowStrings in Utilities.ListOf(Parse.LetterOrDigit.Many().Text(), Parse.String("\r\n").Or(Parse.String("\n")))
             let nonEmptyRows = rowStrings.Where(x => !string.IsNullOrEmpty(x)).ToArray()
-            let rows = nonEmptyRows.Select((row, rowIndex) => ParseRow(row, chartType, rowIndex, nonEmptyRows.Length))
+            let rows = nonEmptyRows.Select((row, rowIndex) => ParseRow(row.Trim(), chartType, rowIndex, nonEmptyRows.Length))
             select new StepmaniaMeasure(rows);
 
         private static readonly Parser<StepmaniaChart> Chart =
@@ -184,7 +184,7 @@ namespace SharpRhythms.Parsers.Msd
                     Meter = int.Parse(meter),
                     Radar = Radar.Parse(radar)
                 },
-                Measures = MsdTagContentParser.ListContent(Measure(chartType)).Parse(measures).ToArray()
+                Measures = MsdTagContentParser.ListContent(Measure(chartType)).Parse(measures)
             };
 
         private static readonly Parser<DisplayBpm> DisplayBpm =
@@ -201,21 +201,21 @@ namespace SharpRhythms.Parsers.Msd
                     Mode = BpmDisplayMode.Static
                 }));
 
-        private static readonly Parser<IEnumerable<BpmChange>> BpmChanges =
+        private static readonly Parser<List<BpmChange>> BpmChanges =
             MsdTagContentParser.ListContent(MsdTagContentParser.TimeIndexedValue)
                 .Select(values => values.Select(x => new BpmChange
                 {
                     Time = x.Time,
                     Bpm = x.Value
-                }));
+                }).ToList());
 
-        private static readonly Parser<IEnumerable<Interruption>> Interruptions =
+        private static readonly Parser<List<Interruption>> Interruptions =
             MsdTagContentParser.ListContent(MsdTagContentParser.TimeIndexedValue)
                 .Select(values => values.Select(x => new Interruption
                 {
                     Time = x.Time,
                     Duration = x.Value
-                }));
+                }).ToList());
 
         protected override StepmaniaTrack BuildTrack(IEnumerable<MsdTag> tags) => new StepmaniaTrack();
     }

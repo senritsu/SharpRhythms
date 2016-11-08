@@ -55,9 +55,9 @@ namespace SharpRhythms.Parsers.Msd.Base
                 Value = double.Parse(value, CultureInfo.InvariantCulture)
             };
 
-        public static Parser<IEnumerable<T>> ListContent<T>(Parser<T> itemParser) => Utilities.ListOf(itemParser.Except(ListDelimiter), ListDelimiter);
+        public static Parser<List<T>> ListContent<T>(Parser<T> itemParser) => Utilities.ListOf(itemParser.Except(ListDelimiter), ListDelimiter);
 
-        public static Parser<IEnumerable<string>> ComplexContent =
+        public static Parser<List<string>> ComplexContent =
             Utilities.ListOf(Parse.AnyChar.Except(ComplexContentDelimiter).Many().Text(), ComplexContentDelimiter);
 
         public static Parser<bool> YesOrNo = Parse.String("YES").Return(true).XOr(Parse.String("NO").Return(false));

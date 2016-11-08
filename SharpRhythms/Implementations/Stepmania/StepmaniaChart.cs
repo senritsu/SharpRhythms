@@ -34,7 +34,7 @@ namespace SharpRhythms.Implementations.Stepmania
         public StepChartType Type { get; set; }
         public string DescriptionOrAuthor { get; set; }
         public StepmaniaDifficultyRating DifficultyRating { get; set; }
-        public IEnumerable<StepmaniaMeasure> Measures { get; set; }
+        public List<StepmaniaMeasure> Measures { get; set; }
         public IEnumerable<StepmaniaNote> Notes => Measures.SelectMany(x => x.Notes);
 
         IEnumerator<StepmaniaNote> IEnumerable<StepmaniaNote>.GetEnumerator() => Notes.GetEnumerator();
