@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 namespace SharpRhythms.Implementations.Stepmania
 {
-    using System;
     using Abstractions.Note;
     using Abstractions.Timing;
     using Enums;

@@ -26,7 +26,7 @@ namespace SharpRhythms.Tests.IntegrationTests
 {
     using System.Linq;
     using Enums;
-    using Parsers.SM;
+    using Parsers.Msd;
     using Shouldly;
     using Xunit;
 

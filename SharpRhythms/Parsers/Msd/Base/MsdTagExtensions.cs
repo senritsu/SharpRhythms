@@ -22,9 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Parsers
+namespace SharpRhythms.Parsers.Msd.Base
 {
-    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;

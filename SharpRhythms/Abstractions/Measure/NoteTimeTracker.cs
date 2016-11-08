@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 namespace SharpRhythms.Abstractions.Measure
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;

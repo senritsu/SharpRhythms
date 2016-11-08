@@ -27,7 +27,7 @@ namespace SharpRhythms.Formats
     using System.Collections.Generic;
     using Abstractions;
     using Abstractions.Track;
-    using Parsers;
+    using Parsers.Msd.Base;
 
     public interface IMsdTrack
     {

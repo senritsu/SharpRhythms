@@ -24,8 +24,7 @@ THE SOFTWARE.
 
 namespace SharpRhythms.Tests
 {
-    using System.Linq;
-    using Parsers;
+    using Parsers.Msd.Base;
     using Shouldly;
     using Sprache;
     using Xunit;

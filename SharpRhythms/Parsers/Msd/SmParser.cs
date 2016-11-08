@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 \***************************************************************************/
 
-namespace SharpRhythms.Parsers.SM
+namespace SharpRhythms.Parsers.Msd
 {
     using System;
     using System.Collections.Generic;
@@ -31,6 +31,7 @@ namespace SharpRhythms.Parsers.SM
     using Abstractions.Measure;
     using Abstractions.Metadata;
     using Abstractions.Track;
+    using Base;
     using Enums;
     using Extensions;
     using Implementations.Stepmania;
