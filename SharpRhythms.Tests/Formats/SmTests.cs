@@ -53,6 +53,14 @@ namespace SharpRhythms.Tests.Formats
             actual.Select(x => x.Duration).ShouldBe(new[] { 2.0, 4.0, 6.0 });
         }
 
+        [Fact]
+        public void EmptyStopsAreParsedCorrectly()
+        {
+            var parser = new SmParser(x => 180);
+            var actual = parser.LoadFromFile("files/SM/empty_stops.sm").Tempo.Interruptions.ToArray();
+            actual.Length.ShouldBe(0);
+        }
+
         public void NotesAreParsedCorrectly()
         {
             throw new NotImplementedException();
