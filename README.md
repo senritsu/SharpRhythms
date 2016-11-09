@@ -29,6 +29,19 @@ var track3 = parser.Load(fileContentsAsStream);
 
 A parsed track is itself an `IEnumerable<TChart>`, while each note chart is an `IEnumerable<TNote>`. In this way all charts and notes can be consumed by applications easily.
 
+```
+var parser = new SMParser(functionToReadLengthFromAudioFile);
+var track = parser.LoadFromFile("file.sm");
+var singleChart = track.First(chart => chart.Type == StepChartType.Single && chart.DifficultyRating.Difficulty == Difficulty.Easy);
+
+foreach(var note in singleChart) {
+    DrawNote(note.Type, note.Direction, note.Time);
+}
+
+// not terribly efficient to do over and over again, helpers for windowed access will be provided in the future
+var notesInTimeWindow = singleChart.Where(note => note.Time <= minTime && note.Time >= maxTime);
+```
+
 ### .sm
 
 ```
