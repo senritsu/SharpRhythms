@@ -32,6 +32,7 @@ A parsed track is itself an `IEnumerable<TChart>`, while each note chart is an `
 ```
 var parser = new SMParser(functionToReadLengthFromAudioFile);
 var track = parser.LoadFromFile("file.sm");
+
 var singleChart = track.First(chart => chart.Type == StepChartType.Single && chart.DifficultyRating.Difficulty == Difficulty.Easy);
 
 foreach(var note in singleChart) {
