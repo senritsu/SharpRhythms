@@ -27,6 +27,8 @@ var track2 = parser.Load(fileContentsAsString);
 var track3 = parser.Load(fileContentsAsStream);
 ```
 
+A parsed track is itself an `IEnumerable<TChart>`, while each note chart is an `IEnumerable<TNote>`. In this way all charts and notes can be consumed by applications easily.
+
 ### .sm
 
 ```
